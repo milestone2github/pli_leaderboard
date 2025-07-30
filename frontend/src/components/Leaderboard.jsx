@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgImage from '../assets/leaderboard-bg.png';
+import trophyIcon from '../assets/icons/trophy_48.png';
 import './Leaderboard.css';
+
+const baseUrl = process.env.REACT_APP_API_URL;
 
 
 const getMedal = (index) => {
@@ -13,7 +16,8 @@ const Leaderboard = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/leaderboard')
+    let url = baseUrl ? `${baseUrl}/leaderboard` : '/api/leaderboard';
+    axios.get(url)
       .then((res) => setData(res.data))
       .catch((err) => console.error('Failed to fetch leaderboard:', err));
   }, []);
@@ -54,7 +58,10 @@ const Leaderboard = () => {
       <td className="py-4">{row.employee_name}</td>
       <td className="py-4">{row._id}</td> 
       <td className="py-4">{row.lead_count}</td>
-      <td className="py-4 font-bold">{row.total_points}</td>
+      <td className={`py-4 font-bold relative`}>
+        <span>{row.total_points}</span>
+        {index === 0 && <img src={trophyIcon} alt="Trophy icon" className='w-8 inline absolute right-4 text-right'/>}
+        </td>
     </tr>
   ))}
 </tbody>
