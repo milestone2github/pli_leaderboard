@@ -1,0 +1,57 @@
+/* Scroll container to prevent table overflow */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Scrollbar for long leaderboards */
+tbody {
+  display: block;
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #00ffff #0b1835;
+}
+
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Sticky header */
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #1e3a8a;
+  z-index: 1;
+}
+
+th, td {
+  padding: 14px;
+  text-align: center;
+  color: white;
+  font-size: 1rem;
+}
+
+tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: background 0.3s ease-in-out;
+}
+
+/* Medals and avatar icons */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Utility for rounded images */
+img.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Background blur effect if needed in non-Tailwind */
+.bg-blur {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
