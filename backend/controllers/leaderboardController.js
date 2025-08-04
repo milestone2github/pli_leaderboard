@@ -1,6 +1,6 @@
-const Leaderboard = require('../models/Leaderboard');
+const Leaderboard = require("../models/Leaderboard");
 
-exports.getLeaderboard = async (req, res) => {
+exports.getLeaderboard = async (_req, res) => {
   try {
     const data = await Leaderboard.aggregate([
       {
@@ -17,6 +17,7 @@ exports.getLeaderboard = async (req, res) => {
       },
       { $sort: { total_points: -1 } }
     ]);
+    // console.log("Data ==> ", data);    // Data debug
 
     res.json(data);
   } catch (err) {

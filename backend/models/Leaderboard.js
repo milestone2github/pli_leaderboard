@@ -11,4 +11,5 @@ const leaderboardSchema = new mongoose.Schema({
   updated_at: { type: Date, default: Date.now }
 }, { collection: 'Leaderboard' });  
 
-module.exports = mongoose.model('Leaderboard', leaderboardSchema);
+const Leaderboard = mongoose.model('Leaderboard', leaderboardSchema);
+module.exports = Leaderboard;

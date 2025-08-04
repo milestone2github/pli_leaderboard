@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgImage from '../assets/leaderboard-bg.png';
 import trophyIcon from '../assets/icons/trophy_48.png';
 import './Leaderboard.css';
+import { useNavigate } from 'react-router-dom';
 
 const baseUrl = process.env.REACT_APP_API_URL;
-
+console.log("base url ==> ", baseUrl);
 
 const getMedal = (index) => {
   const medals = ['🥇', '🥈', '🥉'];
@@ -14,13 +15,65 @@ const getMedal = (index) => {
 
 const Leaderboard = () => {
   const [data, setData] = useState([]);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  console.log("Inside Leaderboard component...");
+
+  // Check if login session is valid
+  useEffect(() => {
+		const checkLoggedIn = async () => {
+			// dispatch(setLoading(true));
+			try {
+        setLoading(true);
+				const { data } = await axios.get(
+					`${process.env.REACT_APP_API_URL}/auth/checkLoggedIn`,
+          { withCredentials: true }
+				);
+				setLoggedIn(data.loggedIn);
+				setUser(data.user);
+
+				if (!data.loggedIn) {
+					navigate("/", { replace: true });
+          return;
+				}
+			} catch (error) {
+				console.error("Error Checking session", error.message);
+				// navigate("/login?error=internalServerError", { replace: true });
+				navigate("/", { replace: true });
+			} finally {
+				setLoading(false);
+			}
+		};
+    checkLoggedIn();
+	}, [navigate]);
 
   useEffect(() => {
-    let url = baseUrl ? `${baseUrl}/leaderboard` : '/api/leaderboard';
-    axios.get(url)
-      .then((res) => setData(res.data))
-      .catch((err) => console.error('Failed to fetch leaderboard:', err));
-  }, []);
+    if (!isLoggedIn) return;
+
+    let url = baseUrl ? `${baseUrl}/api/leaderboard` : '/api/leaderboard';
+    axios
+			.get(url, { withCredentials: true })
+			.then((res) => setData(res.data))
+			// .catch((err) => console.error('Failed to fetch leaderboard:', err));
+			.catch((err) => {
+				if (err.response?.status === 401) {
+					navigate("/", { replace: true });   // Navigate to Login page if session is expired
+				} else {
+					console.error("Failed to fetch leaderboard:", err);
+				}
+			});
+  }, [navigate, isLoggedIn]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white text-xl">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div
