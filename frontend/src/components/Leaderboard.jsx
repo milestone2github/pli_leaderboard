@@ -67,6 +67,26 @@ const Leaderboard = () => {
 			});
   }, [navigate, isLoggedIn]);
 
+  // Handle Logout
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      await axios.post(
+        baseUrl ? `${baseUrl}/auth/logout` : "/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      setLoggedIn(false);
+      setUser(null);
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error("Unable to logout.");
+      throw new Error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+  
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white text-xl">
@@ -80,14 +100,48 @@ const Leaderboard = () => {
       className="min-h-screen bg-cover bg-center flex items-center justify-center px-4 py-10"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <div className="relative w-full max-w-6xl p-8 rounded-3xl border-2 border-cyan-400 bg-black/30 backdrop-blur-lg shadow-[0_0_40px_rgba(0,255,255,0.4)]">
+      <div className="
+        relative
+        w-full
+        max-w-6xl
+        p-8
+        rounded-3xl
+        border-2
+        border-cyan-400
+        bg-black/30
+        backdrop-blur-lg
+        shadow-[0_0_40px_rgba(0,255,255,0.4)]
+        flex
+        flex-col
+        justify-center
+      ">
 
-        {/* Title */}
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-  <h2 className="text-2xl font-extrabold tracking-wider px-6 py-1 rounded-full border-2 border-cyan-400 text-cyan-100 bg-[#0b1835]">
-    LEADERBOARD
-  </h2>
-</div>
+    { /* Logout Button */ }
+    <div className="ml-auto">
+      <button
+        className='
+          px-4
+          py-2
+          w-auto
+          text-white
+          font-bold
+          bg-red-500
+          hover:bg-red-800
+          shadow-md
+          rounded-md
+        '
+        onClick={handleLogout}
+      >
+        LOGOUT
+      </button>
+    </div>    
+
+    {/* Title */}
+    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+      <h2 className="text-2xl font-extrabold tracking-wider px-6 py-1 rounded-full border-2 border-cyan-400 text-cyan-100 bg-[#0b1835]">
+        LEADERBOARD
+      </h2>
+    </div>
         {/* Table */}
         <table className="w-full text-white text-center rounded-xl overflow-hidden mt-10">
           <thead>

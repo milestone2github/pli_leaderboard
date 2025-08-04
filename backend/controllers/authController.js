@@ -3,8 +3,6 @@ const { ZOHO_OAUTH_URL, authUrl } = require("../utils/constants");
 
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const Role = require('../models/Role')		// Included to populate the data in User.find query
 
 const loginWithZoho = (req, res) => {
 	const redirectUrl = req.query.redirect || process.env.DEFAULT_FRONTEND_URL;
@@ -46,16 +44,11 @@ const zohoCallback = async (req, res) => {
 		let id_token = tokenResponse.data.id_token;
 		const decode = jwt.decode(id_token);
 
-		// Store user data in session
-		const userExist = await User.findOne({ email: decode.email }).populate("role");
-
-		if (userExist) {
+		// Store decoded data in session
+		if (decode.email) {
 			req.session.user = {
-				name: userExist.nameAsRM || `${decode.first_name} ${decode.last_name}`,
-				email: userExist.email,
-				mintUsername: userExist.mintUsername,
-				insuranceDashboardId: userExist.insuranceDashboardId,
-				role: userExist.role,
+				name: `${decode.first_name} ${decode.last_name}`,
+				email: decode.email,
 				access_token,
 				refresh_token,
 			};
@@ -84,7 +77,7 @@ const logout = (req, res) => {
 				return res.status(500).json({ message: "Could not log out." });
 			}
 			res.clearCookie("user");
-			// res.status(204).send(); // No content to send back
+			res.status(200).json({ message: "Logged out successfully" });
       return;
 		});
 	} else {
