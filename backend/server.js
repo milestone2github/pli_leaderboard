@@ -63,7 +63,7 @@ app.get('/{*splat}', (_req, res) => {
 })
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(`${process.env.MONGO_URI}/Milestone`)
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
