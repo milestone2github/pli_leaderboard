@@ -52,11 +52,7 @@ const zohoCallback = async (req, res) => {
 				access_token,
 				refresh_token,
 			};
-			const finalRedirect = redirectUrl
-				? `${redirectUrl}/leaderboard`
-				: "/leaderboard";
-
-			res.redirect(finalRedirect);
+			res.redirect(redirectUrl);
 		} else {
 			res.redirect(`${redirectUrl ?? ""}/login?error=permissiondenied`);
 		}

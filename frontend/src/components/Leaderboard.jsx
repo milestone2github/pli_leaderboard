@@ -13,11 +13,11 @@ const getMedal = (index) => {
   return medals[index] || index + 1;
 };
 
-const Leaderboard = () => {
+const Leaderboard = ({isLoggedIn, updateLoggedIn}) => {
   const [data, setData] = useState([]);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  // const [isLoggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState('');
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   console.log("Inside Leaderboard component...");
@@ -25,14 +25,13 @@ const Leaderboard = () => {
   // Check if login session is valid
   useEffect(() => {
 		const checkLoggedIn = async () => {
-			// dispatch(setLoading(true));
 			try {
         setLoading(true);
 				const { data } = await axios.get(
 					`${process.env.REACT_APP_API_URL}/auth/checkLoggedIn`,
           { withCredentials: true }
 				);
-				setLoggedIn(data.loggedIn);
+				updateLoggedIn(data.loggedIn);
 				setUser(data.user);
 
 				if (!data.loggedIn) {
@@ -41,14 +40,13 @@ const Leaderboard = () => {
 				}
 			} catch (error) {
 				console.error("Error Checking session", error.message);
-				// navigate("/login?error=internalServerError", { replace: true });
 				navigate("/", { replace: true });
 			} finally {
 				setLoading(false);
 			}
 		};
     checkLoggedIn();
-	}, [navigate]);
+	}, []);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -65,7 +63,7 @@ const Leaderboard = () => {
 					console.error("Failed to fetch leaderboard:", err);
 				}
 			});
-  }, [navigate, isLoggedIn]);
+  }, [isLoggedIn]);
 
   // Handle Logout
   const handleLogout = async () => {
@@ -76,7 +74,7 @@ const Leaderboard = () => {
         {},
         { withCredentials: true }
       );
-      setLoggedIn(false);
+      updateLoggedIn(false);
       setUser(null);
       navigate("/", { replace: true });
     } catch (err) {
@@ -93,6 +91,10 @@ const Leaderboard = () => {
         Loading...
       </div>
     );
+  }
+
+  if(!isLoggedIn) {
+    return null;
   }
 
   return (

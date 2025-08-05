@@ -6,7 +6,9 @@ import illustration from "../assets/illustration.png";
 import Toast from "./common/Toast";
 import axios from "axios";
 
-const LoginPage = () => {
+const baseUrl = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "";
+
+const LoginPage = ({isLoggedIn, updateLoggedIn}) => {
 	const navigate = useNavigate();
 	const [isCheckingSession, setCheckingSession] = useState(true);
 	const [authError, setAuthError] = useState("");
@@ -30,9 +32,10 @@ const LoginPage = () => {
 		const verifySession = async () => {
 			try {
 				const { data } = await axios.get(
-					`${process.env.REACT_APP_API_URL}/auth/checkLoggedIn`,
+					`${baseUrl}/auth/checkLoggedIn`,
 					{ withCredentials: true }
 				);
+				updateLoggedIn(data.loggedIn)
 				if (data.loggedIn) {
 					navigate("/leaderboard", { replace: true }); // already logged in
 				}
@@ -44,7 +47,7 @@ const LoginPage = () => {
 		};
 
 		verifySession();
-	}, [navigate]);
+	}, []);
 
 	// Show loader while checking session
 	if (isCheckingSession) {
@@ -56,8 +59,8 @@ const LoginPage = () => {
 	}
 
 	const handleLogin = () => {
-		const frontendRedirectUrl = encodeURIComponent(window.location.origin);
-		window.location.href = `${process.env.REACT_APP_API_URL}/auth/zoho?redirect=${frontendRedirectUrl}`;
+		const frontendRedirectUrl = encodeURIComponent(`${window.location.origin}/leaderboard`);
+		window.location.href = `${baseUrl}/auth/zoho?redirect=${frontendRedirectUrl}`;
 	};
 
 	return (
