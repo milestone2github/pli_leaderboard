@@ -8,7 +8,7 @@ import axios from "axios";
 
 const baseUrl = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "";
 
-const LoginPage = ({isLoggedIn, updateLoggedIn}) => {
+const LoginPage = ({updateLoggedIn}) => {
 	const navigate = useNavigate();
 	const [isCheckingSession, setCheckingSession] = useState(true);
 	const [authError, setAuthError] = useState("");
@@ -47,6 +47,7 @@ const LoginPage = ({isLoggedIn, updateLoggedIn}) => {
 		};
 
 		verifySession();
+		// eslint-disable-next-line
 	}, []);
 
 	// Show loader while checking session

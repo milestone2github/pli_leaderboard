@@ -15,8 +15,7 @@ const getMedal = (index) => {
 
 const Leaderboard = ({isLoggedIn, updateLoggedIn}) => {
   const [data, setData] = useState([]);
-  // const [isLoggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState('');
+  // const [user, setUser] = useState('');
   const [isLoading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -32,7 +31,7 @@ const Leaderboard = ({isLoggedIn, updateLoggedIn}) => {
           { withCredentials: true }
 				);
 				updateLoggedIn(data.loggedIn);
-				setUser(data.user);
+				// setUser(data.user);
 
 				if (!data.loggedIn) {
 					navigate("/", { replace: true });
@@ -46,6 +45,7 @@ const Leaderboard = ({isLoggedIn, updateLoggedIn}) => {
 			}
 		};
     checkLoggedIn();
+    // eslint-disable-next-line
 	}, []);
 
   useEffect(() => {
@@ -63,6 +63,7 @@ const Leaderboard = ({isLoggedIn, updateLoggedIn}) => {
 					console.error("Failed to fetch leaderboard:", err);
 				}
 			});
+      // eslint-disable-next-line
   }, [isLoggedIn]);
 
   // Handle Logout
@@ -75,7 +76,7 @@ const Leaderboard = ({isLoggedIn, updateLoggedIn}) => {
         { withCredentials: true }
       );
       updateLoggedIn(false);
-      setUser(null);
+      // setUser(null);
       navigate("/", { replace: true });
     } catch (err) {
       console.error("Unable to logout.");

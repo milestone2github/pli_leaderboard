@@ -12,7 +12,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/' element={ <LoginPage isLoggedIn={isLoggedIn} updateLoggedIn={updateLoggedIn}/> } />
+      <Route path='/' element={ <LoginPage updateLoggedIn={updateLoggedIn}/> } />
       <Route path='/leaderboard' element={ <Leaderboard isLoggedIn={isLoggedIn} updateLoggedIn={updateLoggedIn}/> } />
     </Routes>
   )
